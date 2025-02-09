@@ -67,14 +67,14 @@ def solve(key, mat):
                 for j in range(len(mat[i])):
                     if j != i and j != len(mat[i])-1:
                         if mat[i][j]<0:
-                            print(f' + {f.frac(abs(mat[i][j].num),abs(mat[i][j].den))}*x{j}', end='')
+                            print(f' + {abs(mat[i][j])}*x{j}', end='')
                         elif mat[i][j]>0:
                             print(f' - {mat[i][j]}*x{j}',end='')
                     elif j == len(mat[i])-1:
                         if mat[i][j]<0:
                             print(f' {mat[i][j]}',end='')
                         elif mat[i][j]>0:
-                            print(f' + {f.frac(abs(mat[i][j].num),abs(mat[i][j].den))}',end='')
+                            print(f' + {abs(mat[i][j])}',end='')
                 print(' ')
         
         case -1:
