@@ -166,6 +166,9 @@ class frac:
         if isinstance(other, int):
             other = frac(other, 1)
         return other.__mod__(self)
+    
+    def __abs__(self):
+        return frac(abs(self.num),abs(self.den))
 
     
     

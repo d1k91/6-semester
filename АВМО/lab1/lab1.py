@@ -27,11 +27,14 @@ def Jordan_Gauss(matrix):
             if ch == 0:
                 return 0, matrix
         circ = matrix[i][i]
-        for k in range(i,len(matrix2[i])):
-            matrix2[i][k] = f.frac(matrix2[i][k], circ)
+        if circ == 0:
+            continue
         for j in range(len(matrix)):
             if j != i:
                 matrix2[j][i] = 0
+        for k in range(i,len(matrix2[i])):
+            matrix2[i][k] = f.frac(matrix2[i][k], circ)
+        
         printarr(matrix)
         print(' ')
 
@@ -42,10 +45,13 @@ def Jordan_Gauss(matrix):
             for c in range(len(matrix[r])):
                 if r != i and c > i:
                     matrix2[r][c] = matrix[r][c] - f.frac((matrix[i][c]*matrix[r][i]),circ)
-                    # print(f'{matrix[r][c]} -> {matrix[r][c]} - ({matrix[i][c]}*{matrix[r][i]})/{circ} = {matrix[r][c] - f.frac((matrix[i][c]*matrix[r][i]),circ)}')
+                    print(f'{matrix[r][c]} -> {matrix[r][c]} - ({matrix[i][c]}*{matrix[r][i]})/{circ} = {matrix[r][c] - f.frac((matrix[i][c]*matrix[r][i]),circ)}')
+
+            print(' ')
         print(' ')
         printarr(matrix2)
         print('---------------'*(len(matrix)+2))
+        
 
         matrix = copy.deepcopy(matrix2)
     return 1, matrix
@@ -54,10 +60,7 @@ def solve(key, mat):
     match key:
         case 0:
             print("Система имеет бесконечно много решений")
-            for i in range(len(mat)):
-                ch = check(mat[i])
-                if ch == 0:
-                    mat.pop(i)
+            mat = [x for x in mat if check(x) != 0]
             for i in range(len(mat)):
                 if mat[i][i] == 1:
                     print(f'x{i} = ', end='')
@@ -69,7 +72,7 @@ def solve(key, mat):
                             print(f' - {mat[i][j]}*x{j}',end='')
                     elif j == len(mat[i])-1:
                         if mat[i][j]<0:
-                            print(f'{mat[i][j]}',end='')
+                            print(f' {mat[i][j]}',end='')
                         elif mat[i][j]>0:
                             print(f' + {f.frac(abs(mat[i][j].num),abs(mat[i][j].den))}',end='')
                 print(' ')
@@ -81,7 +84,7 @@ def solve(key, mat):
             for i in range(len(mat)):
                 for j in range(len(mat[i])-1):
                     if mat[i][j] == 1:
-                        print(f'x{j} = {mat[i][-1]}')
+                        print(f'x{j+1} = {mat[i][-1]}')
 
 
 def main():
