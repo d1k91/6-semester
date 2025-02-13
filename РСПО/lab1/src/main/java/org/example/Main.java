@@ -93,6 +93,10 @@ public class Main {
         deleteIfEmpty(integerOutput, dataInfo[0]);
         deleteIfEmpty(decimalOutput, dataInfo[1]);
         deleteIfEmpty(textOutput, dataInfo[2]);
+
+        if (showShortStats || showDetailedStats) {
+            printStats(numberData, decimalData, textData, showShortStats, showDetailedStats, dataInfo);
+        }
     }
 
     public static void analyzeFile(String file, BufferedWriter numberWriter, BufferedWriter decimalWriter,
@@ -145,6 +149,39 @@ public class Main {
             } catch (IOException e) {
                 System.err.println("Error removing empty file: " + file);
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private static void printStats(NumberData numberData, DecimalData decimalData, TextData textData,
+                                   boolean showBriefStats, boolean showDetailedStats, boolean[] dataInfo) {
+        System.out.println("Data Analysis:");
+
+        if (dataInfo[0]) {
+            System.out.println("Total integers: " + numberData.totalNumbers);
+            if (showDetailedStats) {
+                System.out.println("Smallest integer: " + (numberData.totalNumbers > 0 ? numberData.smallestNumber : "N/A"));
+                System.out.println("Largest integer: " + (numberData.totalNumbers > 0 ? numberData.largestNumber : "N/A"));
+                System.out.println("Sum of integers: " + numberData.totalSum);
+                System.out.println("Average of integers: " + (numberData.totalNumbers > 0 ? (double) numberData.totalSum / numberData.totalNumbers : "N/A"));
+            }
+        }
+
+        if (dataInfo[1]) {
+            System.out.println("\nTotal floating point numbers: " + decimalData.totalDecimals);
+            if (showDetailedStats) {
+                System.out.println("Smallest floating point number: " + (decimalData.totalDecimals > 0 ? decimalData.smallestDecimal : "N/A"));
+                System.out.println("Largest floating point number: " + (decimalData.totalDecimals > 0 ? decimalData.largestDecimal : "N/A"));
+                System.out.println("Sum of floating point numbers: " + String.format("%.3f", decimalData.totalDecimalSum));
+                System.out.println("Average of floating point numbers: " + (decimalData.totalDecimals > 0 ? String.format("%.3f", (double) decimalData.totalDecimalSum / decimalData.totalDecimals) : "N/A"));
+            }
+        }
+
+        if (dataInfo[2]) {
+            System.out.println("\nTotal strings: " + textData.totalTexts);
+            if (showDetailedStats) {
+                System.out.println("Shortest string length: " + (textData.totalTexts > 0 ? textData.shortestText : "N/A"));
+                System.out.println("Longest string length: " + (textData.totalTexts > 0 ? textData.longestText : "N/A"));
             }
         }
     }
