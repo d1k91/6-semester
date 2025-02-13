@@ -172,8 +172,8 @@ public class Main {
             if (showDetailedStats) {
                 System.out.println("Smallest floating point number: " + (decimalData.totalDecimals > 0 ? decimalData.smallestDecimal : "N/A"));
                 System.out.println("Largest floating point number: " + (decimalData.totalDecimals > 0 ? decimalData.largestDecimal : "N/A"));
-                System.out.println("Sum of floating point numbers: " + String.format("%.3f", decimalData.totalDecimalSum));
-                System.out.println("Average of floating point numbers: " + (decimalData.totalDecimals > 0 ? String.format("%.3f", (double) decimalData.totalDecimalSum / decimalData.totalDecimals) : "N/A"));
+                System.out.println("Sum of floating point numbers: " + decimalData.totalDecimalSum);
+                System.out.println("Average of floating point numbers: " + (decimalData.totalDecimals > 0 ? (double) decimalData.totalDecimalSum / decimalData.totalDecimals : "N/A"));
             }
         }
 
