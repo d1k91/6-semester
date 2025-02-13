@@ -95,7 +95,7 @@ public class Main {
         deleteIfEmpty(textOutput, dataInfo[2]);
 
         if (showShortStats || showDetailedStats) {
-            printStats(numberData, decimalData, textData, showShortStats, showDetailedStats, dataInfo);
+            printStats(numberData, decimalData, textData, showDetailedStats, dataInfo);
         }
     }
 
@@ -154,7 +154,7 @@ public class Main {
     }
 
     private static void printStats(NumberData numberData, DecimalData decimalData, TextData textData,
-                                   boolean showBriefStats, boolean showDetailedStats, boolean[] dataInfo) {
+                                   boolean showDetailedStats, boolean[] dataInfo) {
         System.out.println("Data Analysis:");
 
         if (dataInfo[0]) {
