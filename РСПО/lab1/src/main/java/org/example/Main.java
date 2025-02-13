@@ -90,6 +90,9 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        deleteIfEmpty(integerOutput, dataInfo[0]);
+        deleteIfEmpty(decimalOutput, dataInfo[1]);
+        deleteIfEmpty(textOutput, dataInfo[2]);
     }
 
     public static void analyzeFile(String file, BufferedWriter numberWriter, BufferedWriter decimalWriter,
@@ -132,6 +135,17 @@ public class Main {
         } catch (IOException e) {
             System.err.println("Error analyzing file: " + file);
             e.printStackTrace();
+        }
+    }
+
+    private static void deleteIfEmpty(Path file, boolean hasData) {
+        if (!hasData) {
+            try {
+                Files.deleteIfExists(file);
+            } catch (IOException e) {
+                System.err.println("Error removing empty file: " + file);
+                e.printStackTrace();
+            }
         }
     }
 
