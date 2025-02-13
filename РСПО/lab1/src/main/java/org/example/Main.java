@@ -73,6 +73,66 @@ public class Main {
         Path decimalOutput = Paths.get(outputDirectory, filePrefix + "decimals.txt");
         Path textOutput = Paths.get(outputDirectory, filePrefix + "texts.txt");
 
+        boolean[] dataInfo = {false, false, false};
+        NumberData numberData = new NumberData();
+        DecimalData decimalData = new DecimalData();
+        TextData textData = new TextData();
+
+        try (
+                BufferedWriter numberWriter = Files.newBufferedWriter(integerOutput, addToExisting ? StandardOpenOption.APPEND : StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+                BufferedWriter decimalWriter = Files.newBufferedWriter(decimalOutput, addToExisting ? StandardOpenOption.APPEND : StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+                BufferedWriter textWriter = Files.newBufferedWriter(textOutput, addToExisting ? StandardOpenOption.APPEND : StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)
+        ) {
+            for (String file : filesToProcess) {
+                analyzeFile(file, numberWriter, decimalWriter, textWriter, dataInfo,
+                        numberData, decimalData, textData);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void analyzeFile(String file, BufferedWriter numberWriter, BufferedWriter decimalWriter,
+                                   BufferedWriter textWriter, boolean[] dataInfo,
+                                   NumberData numberData, DecimalData decimalData, TextData textData) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                if (line.matches("^-?\\d+$")) {
+                    numberWriter.write(line);
+                    numberWriter.newLine();
+                    dataInfo[0] = true;
+                    numberData.totalNumbers++;
+                    int value = Integer.parseInt(line);
+                    numberData.smallestNumber = Math.min(numberData.smallestNumber, value);
+                    numberData.largestNumber = Math.max(numberData.largestNumber, value);
+                    numberData.totalSum += value;
+                } else if (line.matches("^-?\\d*\\.\\d+([eE][+-]?\\d+)?$") || line.matches("^-?\\d+([eE][+-]?\\d+)$")) {
+                    decimalWriter.write(line);
+                    decimalWriter.newLine();
+                    dataInfo[1] = true;
+                    decimalData.totalDecimals++;
+                    double value = Double.parseDouble(line);
+                    decimalData.smallestDecimal = Math.min(decimalData.smallestDecimal, value);
+                    decimalData.largestDecimal = Math.max(decimalData.largestDecimal, value);
+                    decimalData.totalDecimalSum += value;
+                } else {
+                    textWriter.write(line);
+                    textWriter.newLine();
+                    dataInfo[2] = true;
+                    textData.totalTexts++;
+                    int length = line.length();
+                    textData.shortestText = Math.min(textData.shortestText, length);
+                    textData.longestText = Math.max(textData.longestText, length);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error analyzing file: " + file);
+            e.printStackTrace();
+        }
     }
 
 }
