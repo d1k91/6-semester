@@ -16,6 +16,18 @@ def check(arr):
         return -1
     if all(x == 0 for x in arr):
         return 0
+    
+def swap_max_in_column(matrix, matrix2, i):
+    max_value = -100000
+    index = -1
+    for k in range(i, len(matrix)):
+        if matrix[k][i] > max_value:
+            max_value = matrix[k][i]
+            index = k
+    
+    if index != -1:
+        matrix[i], matrix[index] = matrix[index], matrix[i]
+        matrix2[i], matrix2[index] = matrix2[index], matrix2[i]
 
 def Jordan_Gauss(matrix):
     matrix2 = copy.deepcopy(matrix)
@@ -26,18 +38,23 @@ def Jordan_Gauss(matrix):
                 return -1, matrix
             if ch == 0:
                 return 0, matrix
+            
+        printarr(matrix)
+        print(' ')
+
+        for k in range(i, len(matrix)):
+            swap_max_in_column(matrix, matrix2, i)   
+
         circ = matrix[i][i]
         if circ == 0:
             continue
+
         for j in range(len(matrix)):
             if j != i:
                 matrix2[j][i] = 0
         for k in range(i,len(matrix2[i])):
             matrix2[i][k] = f.frac(matrix2[i][k], circ)
         
-        printarr(matrix)
-        print(' ')
-
         printarr(matrix2)
         print(' ')
 
