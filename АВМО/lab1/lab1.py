@@ -1,6 +1,7 @@
 import FracClass as f
+import math
 import copy
-
+import numpy as np
 
 def printarr(arr):
     for i in range(0, len(arr)):
@@ -69,6 +70,12 @@ def Jordan_Gauss(matrix):
         printarr(matrix2)
         print('---------------'*(len(matrix)+2))
         
+        for r in range(len(matrix)):
+            ch = check(matrix2[r])
+            if ch == -1:
+                return -1, matrix2
+            if ch == 0:
+                return 0, matrix2
 
         matrix = copy.deepcopy(matrix2)
     return 1, matrix
@@ -77,16 +84,16 @@ def solve(key, mat):
     match key:
         case 0:
             print("Система имеет бесконечно много решений")
-            mat = [x for x in mat if check(x) != 0]
+            #mat = [x for x in mat if check(x) != 0]
             for i in range(len(mat)):
                 if mat[i][i] == 1:
-                    print(f'x{i} = ', end='')
+                    print(f'x{i+1} = ', end='')
                 for j in range(len(mat[i])):
                     if j != i and j != len(mat[i])-1:
                         if mat[i][j]<0:
-                            print(f' + {abs(mat[i][j])}*x{j}', end='')
+                            print(f' + {abs(mat[i][j])}*x{j+1}', end='')
                         elif mat[i][j]>0:
-                            print(f' - {mat[i][j]}*x{j}',end='')
+                            print(f' - {mat[i][j]}*x{j+1}',end='')
                     elif j == len(mat[i])-1:
                         if mat[i][j]<0:
                             print(f' {mat[i][j]}',end='')
@@ -107,8 +114,14 @@ def solve(key, mat):
 def main():
     with open('lab1.txt', 'r') as file:
         l = [[int(num) for num in line.split(' ')] for line in file]
-    res, mat = Jordan_Gauss(l)
-    solve(res,mat)
+    rank = np.linalg.matrix_rank(l)
+    n = -1
+    for i in range(len(l[0])):
+        n+=1
+    c = C(n,rank)
+    fl,m = Jordan_Gauss(l)
+    solve(fl,m)
+
 
 if __name__ == "__main__":
     main()
