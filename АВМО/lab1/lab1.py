@@ -136,8 +136,6 @@ def solve(key, mat):
             if all(x == 0 for x in mat[row][:-1]):
                 if mat[row][m] != 0:
                     print(f'0 = {mat[row][m]}')
-                else:
-                    print('0 = 0')
 
 
 def main():
