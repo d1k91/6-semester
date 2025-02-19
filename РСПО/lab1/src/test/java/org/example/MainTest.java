@@ -24,17 +24,14 @@ class MainTest {
 
     @Test
     void testBasicDataSeparation() throws IOException {
-        // Подготовка тестовых данных
         String content = "42\n3.14\nHello\n-17\n2.718\nWorld\n";
         Path inputFile = createTempFile(content);
 
-        // Запуск программы
         Main.main(new String[]{
                 "-o", tempDir.toString(),
                 inputFile.toString()
         });
 
-        // Проверка результатов
         Path integerFile = tempDir.resolve("numbers.txt");
         Path floatFile = tempDir.resolve("decimals.txt");
         Path stringFile = tempDir.resolve("texts.txt");
@@ -50,18 +47,15 @@ class MainTest {
 
     @Test
     void testPrefixOption() throws IOException {
-        // Подготовка тестовых данных
         String content = "42\n3.14\nHello";
         Path inputFile = createTempFile(content);
 
-        // Запуск программы с префиксом
         Main.main(new String[]{
                 "-o", tempDir.toString(),
                 "-p", "test_",
                 inputFile.toString()
         });
 
-        // Проверка результатов
         assertTrue(Files.exists(tempDir.resolve("test_numbers.txt")));
         assertTrue(Files.exists(tempDir.resolve("test_decimals.txt")));
         assertTrue(Files.exists(tempDir.resolve("test_texts.txt")));
@@ -69,50 +63,42 @@ class MainTest {
 
     @Test
     void testAppendOption() throws IOException {
-        // Создание первого файла
         String content1 = "42\n3.14\nHello";
         Path inputFile1 = createTempFile(content1);
 
-        // Первый запуск
         Main.main(new String[]{
                 "-o", tempDir.toString(),
                 inputFile1.toString()
         });
 
-        // Создание второго файла
         String content2 = "17\n2.718\nWorld";
         Path inputFile2 = createTempFile(content2);
 
-        // Второй запуск с опцией append
         Main.main(new String[]{
                 "-o", tempDir.toString(),
                 "-a",
                 inputFile2.toString()
         });
 
-        // Проверка результатов
         Path integerFile = tempDir.resolve("numbers.txt");
         assertEquals("42\n17\n", readFile(integerFile).replace("\r\n", "\n"));
     }
 
     @Test
     void testShortStats() throws IOException {
-        String content = "42\n3.14\nHello\n-17\n2.718\nWorld";
+        String content = "12\n3.1415\nHello\nWorld\n-30\n6.5\n";
         Path inputFile = createTempFile(content);
 
-        // Перенаправление System.out
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
         System.setOut(new PrintStream(outContent));
 
-        // Запуск программы с опцией -s
         Main.main(new String[]{
                 "-o", tempDir.toString(),
                 "-s",
                 inputFile.toString()
         });
 
-        // Восстановление System.out
         System.setOut(originalOut);
 
         String output = outContent.toString();
@@ -122,14 +108,13 @@ class MainTest {
     }
     @Test
     void testFullStats() throws IOException {
-        String content = "42\n3.14\nHello\n-17\n2.718\nWorld";
+        String content = "12\n3.1415\nHello\nWorld\n-30\n6.5\n";
         Path inputFile = createTempFile(content);
 
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
         System.setOut(new PrintStream(outContent));
 
-        // Запуск программы с опцией -f
         Main.main(new String[]{
                 "-o", tempDir.toString(),
                 "-f",
@@ -139,15 +124,23 @@ class MainTest {
         System.setOut(originalOut);
 
         String output = outContent.toString();
-        assertTrue(output.contains("Smallest integer: -17"));
-        assertTrue(output.contains("Largest integer: 42"));
-        assertTrue(output.contains("Sum of integers: 25"));
-        assertTrue(output.contains("Average of integers: 12.5"));
+        assertTrue(output.contains("Smallest integer: -30"));
+        assertTrue(output.contains("Largest integer: 12"));
+        assertTrue(output.contains("Sum of integers: -18"));
+        assertTrue(output.contains("Average of integers: -9"));
+
+        assertTrue(output.contains("Smallest floating point number: 3.1415"));
+        assertTrue(output.contains("Largest floating point number: 6.5"));
+        assertTrue(output.contains("Sum of floating point numbers: 9.6415"));
+        assertTrue(output.contains("Average of floating point numbers: 4.82075"));
+
+        assertTrue(output.contains("Shortest string length: 5"));
+        assertTrue(output.contains("Longest string length: 5"));
+
     }
 
     @Test
     void testEmptyFileRemoval() throws IOException {
-        // Создание файла только со строками
         String content = "Hello\nWorld";
         Path inputFile = createTempFile(content);
 
@@ -156,7 +149,6 @@ class MainTest {
                 inputFile.toString()
         });
 
-        // Проверка, что файлы с числами были удалены
         assertFalse(Files.exists(tempDir.resolve("numbers.txt")));
         assertFalse(Files.exists(tempDir.resolve("decimals.txt")));
         assertTrue(Files.exists(tempDir.resolve("texts.txt")));
@@ -180,7 +172,6 @@ class MainTest {
 
     @Test
     void testInvalidInput() throws IOException {
-        // Тест с некорректными данными
         String content = "abc\n12.34.56\n123abc";
         Path inputFile = createTempFile(content);
 
